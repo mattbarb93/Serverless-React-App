@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button } from "reactstrap";
 import {
   faImage,
@@ -12,29 +12,49 @@ import {} from "@fortawesome/fontawesome-svg-core";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [invoices, setInvoices] = useState([
-    {
-      id: "1",
-      Vendor: "Obama",
-      Amount: "$20,000",
-      Invoice: "1123",
-      Date: "8/22/2022",
-    },
-    {
-      id: "2",
-      Vendor: "Biden",
-      Amount: "$21,000",
-      Invoice: "1123",
-      Date: "8/22/2022",
-    },
-    {
-      id: "3",
-      Vendor: "Trump",
-      Amount: "$22,000",
-      Invoice: "1123",
-      Date: "8/22/2022",
-    },
-  ]);
+  const [invoices, setInvoices] = useState([]);
+  // const [invoices, setInvoices] = useState([
+  //   {
+  //     id: "1",
+  //     Vendor: "Obama",
+  //     Amount: "$20,000",
+  //     Invoice: "1123",
+  //     Date: "8/22/2022",
+  //   },
+  //   {
+  //     id: "2",
+  //     Vendor: "Biden",
+  //     Amount: "$21,000",
+  //     Invoice: "1123",
+  //     Date: "8/22/2022",
+  //   },
+  //   {
+  //     id: "3",
+  //     Vendor: "Trump",
+  //     Amount: "$22,000",
+  //     Invoice: "1123",
+  //     Date: "8/22/2022",
+  //   },
+  // ]);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const response = await fetch(
+          "https://5eaalscigb.execute-api.us-east-1.amazonaws.com/Dev"
+        );
+        const body = await response.json();
+        setInvoices(body);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    setTimeout(() => {
+      (async () => await fetchAPI())();
+    }, 1000);
+  }, []);
 
   if (isLoading) return <div>Loading</div>;
 
